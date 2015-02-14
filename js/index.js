@@ -86,14 +86,14 @@ var init = function () {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(scene.fog.color, 1);
   document.body.appendChild(renderer.domElement);
-}
+};
 
 var animate = function () {
   var dt = 1/60;
   requestAnimationFrame(animate);
   world.step(dt);
   renderer.render(scene, camera);
-}
+};
 
 initCannon();
 init();
