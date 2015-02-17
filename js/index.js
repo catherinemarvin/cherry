@@ -22,6 +22,12 @@ var initCannon = function () {
   body.angularVelocity.set(0, 10, 0);
   body.angularDamping = 0.5;
   world.add(body);
+
+  var groundShape = new CANNON.Plane();
+  var groundBody = new CANNON.Body({ mass: 0 });
+  groundBody.addShape(groundShape);
+  groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0), -Math.PI/2);
+  world.add(groundBody);
 };
 
 var initThree = function () {
@@ -30,6 +36,18 @@ var initThree = function () {
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 100);
   camera.position.z = 5;
   scene.add(camera);
+
+  // Floor
+
+  var floorGeometry = new THREE.PlaneGeometry(300, 300, 50, 50);
+  floorGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI/2));
+
+  var floorMaterial = new THREE.MeshLambertMaterial( { color: 0xdddddd } );
+
+  var floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
+  floorMesh.castShadow = true;
+  floorMesh.receiveShadow = true;
+  scene.add(floorMesh);
 
   geometry = new THREE.BoxGeometry(2, 2, 2);
   material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
