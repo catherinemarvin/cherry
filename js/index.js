@@ -32,6 +32,24 @@ var initCannon = function () {
 
 var initThree = function () {
   scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x000000, 0 , 500);
+
+  var ambient = new THREE.AmbientLight(0x111111);
+  scene.add(ambient);
+
+  var light = new THREE.SpotLight(0xffffff);
+  light.position.set(10,30,20);
+  light.target.position.set(0,0,0);
+  light.castShadow = true;
+  light.shadowCameraNear = 20;
+  light.shadowCameraFar = 50;
+  light.shadowCameraFov = 40;
+
+  light.shadowMapBias = 0.1;
+  light.shadowMapDarkness = 0.7;
+  light.shadowMapWidth = 2 * 512;
+  light.shadowMapHeight = 2 * 512;
+  scene.add(light);
 
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 100);
   camera.position.z = 5;
@@ -56,6 +74,9 @@ var initThree = function () {
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMapEnabled = true;
+  renderer.shadowMapSoft = true;
+  renderer.setClearColor(scene.fog.color, 1);
   document.body.appendChild(renderer.domElement);
 };
 
