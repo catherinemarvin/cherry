@@ -16,6 +16,10 @@ var initCannon = function () {
   world.broadphase = new CANNON.NaiveBroadphase();
   world.solver.iterations = 10;
 
+  var physicsMaterial = new CANNON.Material("slipperyMaterial");
+  var physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, 0.0, 0.3);
+  world.addContactMaterial(physicsContactMaterial);
+
   var groundShape = new CANNON.Plane();
   var groundBody = new CANNON.Body({ mass: 0 });
   groundBody.addShape(groundShape);
