@@ -1,27 +1,20 @@
 // CANNON stuff
 var world;
-var shape, mass, body;
 
 // ThreeJS stuff
 var camera, scene, renderer;
 var geometry, material, mesh;
 var timeStep = 1/60;
 
+// Boxes
+var boxes = [];
+var boxMeshes = [];
+
 var initCannon = function () {
   world = new CANNON.World();
   world.gravity.set(0, -20, 0);
   world.broadphase = new CANNON.NaiveBroadphase();
   world.solver.iterations = 10;
-
-  shape = new CANNON.Box(new CANNON.Vec3(1,1,1));
-  mass = 1;
-  body = new CANNON.Body({
-    mass: mass
-  });
-  body.addShape(shape);
-  body.angularVelocity.set(0, 10, 0);
-  body.angularDamping = 0.5;
-  world.add(body);
 
   var groundShape = new CANNON.Plane();
   var groundBody = new CANNON.Body({ mass: 0 });
@@ -67,10 +60,27 @@ var initThree = function () {
   floorMesh.receiveShadow = true;
   scene.add(floorMesh);
 
-  geometry = new THREE.BoxGeometry(2, 2, 2);
-  material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
-  mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
+  // Boxes
+  var halfExtents = new CANNON.Vec3(1,1,1);
+  var boxShape = new CANNON.Box(halfExtents);
+  var boxGeometry = new THREE.BoxGeometry(halfExtents.x * 2, halfExtents.y * 2, halfExtents.z * 2);
+  for (var i = 0; i < 7; i++) {
+    var x = (Math.random() - 0.5) * 20;
+    var y = 1 + (Math.random() - 0.5) * 1;
+    var z = (Math.random() - 0.5) * 20;
+    var boxBody = new CANNON.Body({ mass: 5});
+    boxBody.addShape(boxShape);
+    var boxMesh = new THREE.Mesh(boxGeometry, floorMaterial);
+    world.add(boxBody);
+    scene.add(boxMesh);
+    boxBody.position.set(x,y,z);
+    boxMesh.position.set(x,y,z);
+    boxMesh.castShadow = true;
+    boxMesh.receiveShadow = true;
+    boxes.push(boxBody);
+    boxMeshes.push(boxMesh);
+  }
+
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -91,8 +101,10 @@ var updatePhysics = function () {
   world.step(timeStep);
 
   // Copy coordinates from Cannon to Three
-  mesh.position.copy(body.position);
-  mesh.quaternion.copy(body.quaternion);
+  for (var i = 0; i < boxes.length; i++) {
+    boxMeshes[i].position.copy(boxes[i].position);
+    boxMeshes[i].quaternion.copy(boxes[i].quaternion);
+  }
 };
 
 initCannon();
