@@ -9,7 +9,7 @@ var timeStep = 1/60;
 
 var initCannon = function () {
   world = new CANNON.World();
-  world.gravity.set(0, 0, 0);
+  world.gravity.set(0, -20, 0);
   world.broadphase = new CANNON.NaiveBroadphase();
   world.solver.iterations = 10;
 
