@@ -1,5 +1,6 @@
 // CANNON stuff
 var world;
+var sphereShape, sphereBody;
 
 // ThreeJS stuff
 var camera, scene, renderer;
@@ -9,6 +10,9 @@ var timeStep = 1/60;
 // Boxes
 var boxes = [];
 var boxMeshes = [];
+
+// Pointer Lock
+var controls, time = Date.now();
 
 var initCannon = function () {
   world = new CANNON.World();
@@ -25,6 +29,15 @@ var initCannon = function () {
   groundBody.addShape(groundShape);
   groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0), -Math.PI/2);
   world.add(groundBody);
+
+  // Sphere body for controls
+  var mass = 5, radius = 1.3;
+  sphereShape = new CANNON.Sphere(radius);
+  sphereBody = new CANNON.Body({ mass: mass});
+  sphereBody.addShape(sphereShape);
+  sphereBody.position.set(0,5,0);
+  sphereBody.linearDamping = 0.9;
+  world.add(sphereBody);
 };
 
 var initThree = function () {
@@ -49,9 +62,6 @@ var initThree = function () {
   scene.add(light);
 
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 100);
-  camera.position.z = 5;
-  camera.position.y = 5;
-  scene.add(camera);
 
   // Floor
 
@@ -93,6 +103,10 @@ var initThree = function () {
   renderer.shadowMapSoft = true;
   renderer.setClearColor(scene.fog.color, 1);
   document.body.appendChild(renderer.domElement);
+
+  // Pointer Lock Controls
+  controls = new THREE.PointerLockControls(camera, sphereBody);
+  scene.add(controls.getObject());
 };
 
 var animate = function () {
@@ -112,6 +126,35 @@ var updatePhysics = function () {
   }
 };
 
+var pointerLock = function () {
+  var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+
+  if (havePointerLock) {
+    var element = document.body;
+    var pointerLockChange = function (event) {
+      if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+        controls.enabled = true;
+      }
+    };
+    var pointerLockError = function (event) {
+      console.log(":(");
+    };
+
+    // Hook pointer lock state change events
+    document.addEventListener( 'pointerlockchange', pointerLockChange, false );
+    document.addEventListener( 'mozpointerlockchange', pointerLockChange, false );
+    document.addEventListener( 'webkitpointerlockchange', pointerLockChange, false );
+    document.addEventListener( 'pointerlockerror', pointerLockError, false );
+    document.addEventListener( 'mozpointerlockerror', pointerLockError, false );
+    document.addEventListener( 'webkitpointerlockerror', pointerLockError, false );
+
+    // Ask the browser lock the pointer
+    element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+    element.requestPointerLock();
+  }
+};
+
+pointerLock();
 initCannon();
 initThree();
 animate();
