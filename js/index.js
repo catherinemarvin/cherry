@@ -137,6 +137,7 @@ var pointerLock = function () {
       }
     };
     var pointerLockError = function (event) {
+      console.log(event);
       console.log(":(");
     };
 
@@ -149,8 +150,11 @@ var pointerLock = function () {
     document.addEventListener( 'webkitpointerlockerror', pointerLockError, false );
 
     // Ask the browser lock the pointer
-    element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-    element.requestPointerLock();
+
+    document.body.addEventListener("click", function (event) {
+      element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+      element.requestPointerLock();
+    }, false);
   }
 };
 
