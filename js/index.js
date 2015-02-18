@@ -133,7 +133,9 @@ var pointerLock = function () {
     var element = document.body;
     var pointerLockChange = function (event) {
       if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+        var blocker = document.getElementById("blocker");
         controls.enabled = true;
+        blocker.style.display = "none";
       }
     };
     var pointerLockError = function (event) {
@@ -152,9 +154,13 @@ var pointerLock = function () {
     // Ask the browser lock the pointer
 
     document.body.addEventListener("click", function (event) {
+      var instructions = document.getElementById("instructions");
+      instructions.style.display = "none";
       element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
       element.requestPointerLock();
     }, false);
+  } else {
+    instructions.innerHTML = "No pointer lock for you";
   }
 };
 
