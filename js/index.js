@@ -104,6 +104,8 @@ var initThree = function () {
   renderer.setClearColor(scene.fog.color, 1);
   document.body.appendChild(renderer.domElement);
 
+  window.addEventListener("resize", onWindowResize, true);
+
   // Pointer Lock Controls
   controls = new THREE.PointerLockControls(camera, sphereBody);
   scene.add(controls.getObject());
@@ -162,6 +164,12 @@ var pointerLock = function () {
   } else {
     instructions.innerHTML = "No pointer lock for you";
   }
+};
+
+var onWindowResize = function () {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 };
 
 pointerLock();
