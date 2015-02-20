@@ -235,7 +235,7 @@ var shoot = function () {
 var getShootDir = function (targetVec) {
   var vector = targetVec;
   targetVec.set(0,0,1);
-  projector.unprojectVector(vector, camera);
+  vector.unproject(camera);
   var ray = new THREE.Ray(sphereBody.position, vector.sub(sphereBody.position).normalize());
   targetVec.x = ray.direction.x;
   targetVec.y = ray.direction.y;
