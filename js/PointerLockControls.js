@@ -60,4 +60,17 @@ THREE.PointerLockControls = function ( camera ) {
 
 	}();
 
+  // Update the camera to be where the CANNON representation is.
+  var inputVelocity = new THREE.Vector3();
+  var euler = new THREE.Euler();
+  this.update = function (delta) {
+    if (!scope.enabled) {
+      return;
+    }
+    delta *= 0.1;
+
+    inputVelocity
+
+  };
+
 };

@@ -221,6 +221,7 @@ var shoot = function () {
   ballMeshes.push(ballMesh);
 
   getShootDir(shootDirection);
+  console.log(shootDirection);
 
   ballBody.velocity.set(shootDirection.x * shootVelo, shootDirection.y * shootVelo, shootDirection.z * shootVelo);
 
