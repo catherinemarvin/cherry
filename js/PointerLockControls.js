@@ -2,7 +2,7 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE.PointerLockControls = function ( camera ) {
+THREE.PointerLockControls = function (camera, cannonBody) {
 
 	var scope = this;
 
@@ -16,6 +16,11 @@ THREE.PointerLockControls = function ( camera ) {
 	yawObject.add( pitchObject );
 
 	var PI_2 = Math.PI / 2;
+
+  // Camera specifics
+  var eyeYPos = 2; // eyes are 2 meters above the ground.
+  var velocityFactor = 0.2;
+  var velocity = cannonBody.velocity;
 
 	var onMouseMove = function ( event ) {
 
@@ -69,8 +74,19 @@ THREE.PointerLockControls = function ( camera ) {
     }
     delta *= 0.1;
 
-    inputVelocity
+    inputVelocity.set(0,0,0);
 
+    // Convert velocity to world coordinates
+    euler.x = pitchObject.rotation.x;
+    euler.y = yawObject.rotation.y;
+    euler.order = "XYZ";
+    quat.setFromEuler(euler);
+    inputVelocity.applyQuaternion(quat);
+
+    velocity.x += inputVelocity.x;
+    velocity.z += inputVelocity.z;
+
+    yawObject.position.copy(cannonBody.position);
   };
 
 };
