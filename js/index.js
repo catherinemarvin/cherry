@@ -16,7 +16,6 @@ var balls = [];
 var ballMeshes = [];
 var ballShape, ballGeometry;
 var shootDirection, shootVelo;
-var projector;
 
 
 // Pointer Lock
@@ -196,7 +195,6 @@ var initShooting = function () {
   ballGeometry = new THREE.SphereGeometry(ballShape.radius, 32, 32);
   shootDirection = new THREE.Vector3();
   shootVelo = 15;
-  projector = new THREE.Projector();
 };
 
 
