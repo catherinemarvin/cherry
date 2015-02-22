@@ -139,6 +139,8 @@ var updatePhysics = function () {
     ballMeshes[i].position.copy(balls[i].position);
     ballMeshes[i].quaternion.copy(balls[i].quaternion);
   }
+  controls.update(Date.now() - time);
+  time = Date.now();
 };
 
 var pointerLock = function () {
