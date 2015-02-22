@@ -138,7 +138,7 @@ var updatePhysics = function () {
     ballMeshes[i].position.copy(balls[i].position);
     ballMeshes[i].quaternion.copy(balls[i].quaternion);
   }
-  controls.update(Date.now() - time);
+  // controls.update(Date.now() - time);
   time = Date.now();
 };
 
@@ -203,9 +203,13 @@ var shoot = function () {
     return;
   }
 
-  var x = sphereBody.position.x;
-  var y = sphereBody.position.y;
-  var z = sphereBody.position.z;
+  //var x = sphereBody.position.x;
+  //var y = sphereBody.position.y;
+  //var z = sphereBody.position.z;
+  var pos = controls.getObject().position;
+  var x = pos.x;
+  var y = pos.y;
+  var z = pos.z;
 
   var ballBody = new CANNON.Body({ mass: 1 });
   ballBody.addShape(ballShape);
